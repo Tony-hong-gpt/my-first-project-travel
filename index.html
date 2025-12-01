@@ -58,7 +58,7 @@
       // 긍정 단어
       if (text.includes("좋") || text.includes("추천") || text.includes("만족")) score += 20;
       if (text.includes("최고") || text.includes("완벽")) score += 20;
-      if (text.includes("친절") || text.includes("기깝")) score += 20;
+      if (text.includes("친절") || text.includes("기깝")) score += 10;
 
       // 부정 단어
       if (text.includes("별로") || text.includes("실망") || text.includes("최악")) score -= 20;
