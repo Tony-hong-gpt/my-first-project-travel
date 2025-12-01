@@ -100,10 +100,12 @@
 
     let total = 0;
     let rows = "";
+    let totalLength = 0;        // ★ 전체 글자수 합
 
     lines.forEach((review, idx) => {
       const score = scoreReview(review);
       const kw = extractKeywords(review);
+      const length = review.length;   // ★ 이 리뷰의 글자수
 
       total += score;
 
@@ -112,6 +114,7 @@
           <td>${idx + 1}</td>
           <td>${review}</td>
           <td>${score}점</td>
+          <td>${length}</td>  <!-- ★ 글자수 컬럼 -->
           <td>
             <strong>긍정:</strong> ${kw.positive.join(", ") || "없음"}<br>
             <strong>부정:</strong> ${kw.negative.join(", ") || "없음"}<br>
@@ -125,15 +128,18 @@
     });
 
     const avg = Math.round(total / lines.length);
+    const avgLength = Math.round(totalLength / lines.length);   // ★ 평균 글자수
 
     document.getElementById("output").innerHTML = `
-      <p>총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avg}점</strong></p>
+      <p>총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avg}점</strong><br>
+      평균 리뷰 길이: <strong>${avgLength}글자</strong></p>
       <table>
         <thead>
           <tr>
             <th>#</th>
             <th>리뷰 내용</th>
             <th>점수</th>
+            <th>글자수</th>         <!-- ★ 새로 추가된 헤더 -->
             <th>키워드 분석</th>
           </tr>
         </thead>
