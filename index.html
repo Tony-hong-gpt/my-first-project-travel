@@ -123,22 +123,28 @@
     }
 
     // 4. 키워드 배열을 태그 모양 HTML로 변환
-    function renderTags(words, bgColor) {
-      if (!words || words.length === 0) {
-        return '<span style="font-size:0.8rem; color:#999;">없음</span>';
-      }
+   function renderTags(words, bgColor) {
+    if (!words || words.length === 0) {
+      return '<span style="font-size:0.8rem; color:#999;">없음</span>';
+    }
 
       return words
-        .map(w => `<span style="
-          display:inline-block;
-          padding:2px 6px;
-          margin:2px 4px 2px 0;
-          border-radius:999px;
-          background-color:${bgColor};
-          font-size:0.8rem;
-        ">${w}</span>`)
+        .map(
+          w => `<span style="
+            display:inline-block;
+            padding:4px 8px;
+            margin:2px 6px 2px 0;
+            border-radius:999px;
+            background-color:${bgColor};
+            border:1px solid rgba(0,0,0,0.12);
+            color:#111;
+            font-size:0.8rem;
+            font-weight:600;
+          ">${w}</span>`
+        )
         .join("");
     }
+
 
     // 5. 여러 리뷰를 한꺼번에 분석
     function analyzeAll() {
