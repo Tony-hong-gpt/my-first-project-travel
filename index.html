@@ -93,6 +93,38 @@
       };
     }
 
+    // 🔽🔽🔽 여기부터 새로 추가 🔽🔽🔽
+function summarizeReview(kw, score) {
+  let tone = "";
+
+  // 감정 톤 결정
+  if (kw.positive.length > 0 && kw.negative.length === 0) {
+    tone = "전반적으로 긍정적인 리뷰입니다.";
+  } else if (kw.negative.length > 0 && kw.positive.length === 0) {
+    tone = "전반적으로 부정적인 리뷰입니다.";
+  } else if (kw.positive.length > 0 && kw.negative.length > 0) {
+    tone = "좋은 점과 아쉬운 점이 함께 있는 리뷰입니다.";
+  } else {
+    tone = "감정 표현이 뚜렷하지 않은 리뷰입니다.";
+  }
+
+  // 어떤 요소에 대한 내용인지 정리
+  const aspects = [];
+  if (kw.location.length > 0) aspects.push("위치");
+  if (kw.service.length > 0) aspects.push("서비스");
+  if (kw.facility.length > 0) aspects.push("시설");
+  if (kw.price.length > 0) aspects.push("가격");
+
+  let aspectText = "";
+  if (aspects.length > 0) {
+    aspectText = aspects.join(", ") + "에 대한 내용입니다.";
+  }
+
+  // 두 문장을 하나로 합쳐 반환
+  return (tone + " " + aspectText).trim();
+}
+    // 🔼🔼🔼 여기까지 새로 추가 🔼🔼🔼
+    
     // 여러 리뷰를 한꺼번에 분석
     function analyzeAll() {
       const raw = document.getElementById("reviews").value.trim();
@@ -114,6 +146,7 @@
         const score = scoreReview(review);
         const kw = extractKeywords(review);
         const length = review.length;
+        const summary = summarizeReview(kw, score);   // ← ★ 새로 추가
 
         totalScore += score;
         totalLength += length;
@@ -140,6 +173,7 @@
               <strong>위치:</strong> ${kw.location.join(", ") || "없음"}<br>
               <strong>가격:</strong> ${kw.price.join(", ") || "없음"}
             </td>
+            <td>${summary}</td>
           </tr>
         `;
       });
@@ -160,6 +194,7 @@
               <th>점수</th>
               <th>글자수</th>
               <th>키워드 분석</th>
+              <th>요약</th>
             </tr>
           </thead>
           <tbody>
