@@ -58,9 +58,15 @@
 
       let score = 50;
       // 긍정 단어
-      if (text.includes("좋") || text.includes("추천") || text.includes("만족")) score += 10;
-      if (text.includes("최고") || text.includes("완벽")) score += 5;
-      if (text.includes("친절") || text.includes("기쁨") || text.includes("기분")) score += 10;
+      if (text.includes("좋")) score += 10;
+      if (text.includes("추천")) score += 10;
+      if (text.includes("만족")) score += 10;
+      
+      if (text.includes("최고")) score += 5;
+      if (text.includes("완벽")) score += 5;
+      
+      if (text.includes("친절")) score += 10;
+      if (text.includes("기쁨")) score += 10;
 
       // 부정 단어
       if (text.includes("별로") || text.includes("실망") || text.includes("최악")) score -= 20;
