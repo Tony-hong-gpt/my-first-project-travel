@@ -114,29 +114,34 @@
         </table>
       `;
     }
+
+  // ⬇⬇⬇ 여기 안에 extractKeywords 함수가 있어야 함 ⬇⬇⬇
+
+  function extractKeywords(text) {
+    const positive = ["좋", "만족", "편안", "친절", "최고", "기분"];
+    const negative = ["별로", "불편", "실망", "비쌌", "소음", "시끄럽", "좁", "더럽"];
+    
+    const facility = ["방", "룸", "화장실", "침대", "청소", "시설", "욕실"];
+    const service = ["직원", "응대", "서비스", "친절"];
+    const location = ["위치", "교통", "역", "근처"];
+    const price = ["가격", "가성비", "비싸", "저렴"];
+
+    function findMatches(words) {
+      return words.filter(w => text.includes(w));
+    }
+
+    return {
+      positive: findMatches(positive),
+      negative: findMatches(negative),
+      facility: findMatches(facility),
+      service: findMatches(service),
+      location: findMatches(location),
+      price: findMatches(price)
+    };
+  }
+
+  // 기존 analyzeAll() 함수도 여기 같은 <script> 태그 안에 있음
+    
   </script>
 </body>
 </html>
-// 리뷰 문장에서 핵심 키워드를 자동으로 찾아주는 함수
-function extractKeywords(text) {
-  const positive = ["좋", "만족", "편안", "친절", "최고", "기분"];
-  const negative = ["별로", "불편", "실망", "비쌌", "소음", "시끄럽", "좁", "더럽"];
-  
-  const facility = ["방", "룸", "화장실", "침대", "청소", "시설", "욕실"];
-  const service = ["직원", "응대", "서비스", "친절"];
-  const location = ["위치", "교통", "역", "근처"];
-  const price = ["가격", "가성비", "비싸", "저렴"];
-
-  function findMatches(words) {
-    return words.filter(w => text.includes(w));
-  }
-
-  return {
-    positive: findMatches(positive),
-    negative: findMatches(negative),
-    facility: findMatches(facility),
-    service: findMatches(service),
-    location: findMatches(location),
-    price: findMatches(price)
-  };
-}
