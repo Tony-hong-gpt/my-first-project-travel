@@ -48,7 +48,6 @@
   <div id="output"></div>
 
 <script>
-
   // 점수 계산
   function scoreReview(text) {
     let score = 50;
@@ -89,79 +88,55 @@
   }
 
   // 전체 리뷰 분석
- // 전체 리뷰 분석
-function analyzeAll() {
-  const raw = document.getElementById("reviews").value.trim();
-  const lines = raw.split(/\n+/).map(l => l.trim()).filter(l => l.length > 0);
+  function analyzeAll() {
+    const raw = document.getElementById("reviews").value.trim();
+    const lines = raw.split(/\n+/).map(l => l.trim()).filter(l => l.length > 0);
 
-  if (lines.length === 0) {
-    document.getElementById("output").innerHTML = "<p>리뷰를 입력해주세요.</p>";
-    return;
-  }
-
-  let total = 0;
-  let rows = "";
-  let totalLength = 0;        // ★ 전체 글자수 합
-
-  lines.forEach((review, idx) => {
-    const score = scoreReview(review);
-    const kw = extractKeywords(review);
-    const length = review.length;   // 이 리뷰의 글자수
-
-    total += score;
-    totalLength += length;    // ★ 평균 길이 계산용
-
-    // ★ 점수에 따라 색상 결정
-    let scoreColor = "black";
-    if (score >= 80) {
-      scoreColor = "green";
-    } else if (score <= 50) {
-      scoreColor = "red";
+    if (lines.length === 0) {
+      document.getElementById("output").innerHTML = "<p>리뷰를 입력해주세요.</p>";
+      return;
     }
 
-    rows += `
-      <tr>
-        <td>${idx + 1}</td>
-        <td>${review}</td>
-        <td style="color: ${scoreColor}; font-weight: bold;">${score}점</td>
-        <td>${length}</td>
-        <td>
-          <strong>긍정:</strong> ${kw.positive.join(", ") || "없음"}<br>
-          <strong>부정:</strong> ${kw.negative.join(", ") || "없음"}<br>
-          <strong>시설:</strong> ${kw.facility.join(", ") || "없음"}<br>
-          <strong>서비스:</strong> ${kw.service.join(", ") || "없음"}<br>
-          <strong>위치:</strong> ${kw.location.join(", ") || "없음"}<br>
-          <strong>가격:</strong> ${kw.price.join(", ") || "없음"}
-        </td>
-      </tr>
-    `;
-  });
+    let total = 0;
+    let rows = "";
+    let totalLength = 0;
 
-  const avg = Math.round(total / lines.length);
-  const avgLength = Math.round(totalLength / lines.length);
+    lines.forEach((review, idx) => {
+      const score = scoreReview(review);
+      const kw = extractKeywords(review);
+      const length = review.length;
 
-  document.getElementById("output").innerHTML = `
-    <p>총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avg}점</strong><br>
-    평균 리뷰 길이: <strong>${avgLength}글자</strong></p>
-    <table>
-      <thead>
+      total += score;
+      totalLength += length;
+
+      // 점수에 따라 색상 결정
+      let scoreColor = "black";
+      if (score >= 80) {
+        scoreColor = "green";
+      } else if (score <= 50) {
+        scoreColor = "red";
+      }
+
+      rows += `
         <tr>
-          <th>#</th>
-          <th>리뷰 내용</th>
-          <th>점수</th>
-          <th>글자수</th>
-          <th>키워드 분석</th>
+          <td>${idx + 1}</td>
+          <td>${review}</td>
+          <td style="color: ${scoreColor}; font-weight: bold;">${score}점</td>
+          <td>${length}</td>
+          <td>
+            <strong>긍정:</strong> ${kw.positive.join(", ") || "없음"}<br>
+            <strong>부정:</strong> ${kw.negative.join(", ") || "없음"}<br>
+            <strong>시설:</strong> ${kw.facility.join(", ") || "없음"}<br>
+            <strong>서비스:</strong> ${kw.service.join(", ") || "없음"}<br>
+            <strong>위치:</strong> ${kw.location.join(", ") || "없음"}<br>
+            <strong>가격:</strong> ${kw.price.join(", ") || "없음"}
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        ${rows}
-      </tbody>
-    </table>
-  `;
-}
+      `;
+    });
 
     const avg = Math.round(total / lines.length);
-    const avgLength = Math.round(totalLength / lines.length);   // ★ 평균 글자수
+    const avgLength = Math.round(totalLength / lines.length);
 
     document.getElementById("output").innerHTML = `
       <p>총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avg}점</strong><br>
@@ -172,7 +147,7 @@ function analyzeAll() {
             <th>#</th>
             <th>리뷰 내용</th>
             <th>점수</th>
-            <th>글자수</th> 
+            <th>글자수</th>
             <th>키워드 분석</th>
           </tr>
         </thead>
@@ -182,8 +157,8 @@ function analyzeAll() {
       </table>
     `;
   }
-
 </script>
+
 
 </body>
 </html>
