@@ -4,108 +4,299 @@
   <meta charset="UTF-8" />
   <title>여행 리뷰 분석 실험 v2</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #f8fafc;
+    :root {
+      --bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --border-subtle: #e5e7eb;
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --green: #16a34a;
+      --green-soft: #ecfdf3;
+      --red: #dc2626;
+      --red-soft: #fef2f2;
+      --neutral-soft: #f9fafb;
+      --accent: #3b82f6;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Arial, sans-serif;
+      background: radial-gradient(circle at top, #e0f2fe 0, #f3f4f6 40%, #eef2ff 100%);
+      color: var(--text-main);
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      font-size: 0.95rem;
+      color: var(--text-sub);
+    }
+
     textarea {
       width: 100%;
-      height: 150px;
-    }
-    button {
-      padding: 10px 15px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      vertical-align: top;
-    }
-    th {
-      background-color: #f4f4f4;
-      text-align: left;
-    }
-    .card {
-      border: 1px solid #ddd;
+      min-height: 140px;
+      padding: 12px 14px;
       border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      background: rgba(255, 255, 255, 0.9);
     }
-    
-    .card-score {
-      font-weight: bold;
-      margin-top: 6px;
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
-    
-    .card-tags div {
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        background-color 0.12s ease, border-color 0.12s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
+    }
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border-color: var(--border-subtle);
+    }
+    .btn-secondary:hover {
+      background: #f9fafb;
+      border-color: #d1d5db;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    h2 {
+      margin-top: 28px;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-bar {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    /* 카드 공통 스타일 */
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 14px 18px 16px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    /* 점수에 따라 카드 배경 / 테두리 색 다르게 */
+    .card--good {
+      background: linear-gradient(135deg, #ecfdf3, #f0fdf4);
+      border-color: rgba(22, 163, 74, 0.35);
+    }
+    .card--bad {
+      background: linear-gradient(135deg, #fef2f2, #fef2f2);
+      border-color: rgba(220, 38, 38, 0.28);
+    }
+    .card--neutral {
+      background: linear-gradient(135deg, #f9fafb, #ffffff);
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    .score-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .score-pill--good {
+      background: rgba(22, 163, 74, 0.08);
+      color: var(--green);
+    }
+    .score-pill--bad {
+      background: rgba(220, 38, 38, 0.08);
+      color: var(--red);
+    }
+    .score-pill--neutral {
+      background: rgba(107, 114, 128, 0.08);
+      color: #374151;
+    }
+
+    .review-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .meta-row {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .meta-row strong {
+      margin-right: 4px;
+      color: #4b5563;
+    }
+
+    .tag-group {
+      font-size: 0.8rem;
       margin-top: 4px;
     }
-    
+
+    .tag-group-label {
+      font-weight: 600;
+      margin-right: 4px;
+      color: #4b5563;
+    }
+
+    .chip-empty {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      margin: 2px 4px 0 0;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
     .card-summary {
       margin-top: 10px;
       padding-top: 8px;
-      border-top: 1px solid #eee;
-      font-size: 0.9rem;
-      color: #444;
+      border-top: 1px dashed rgba(148, 163, 184, 0.7);
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 20px 14px 32px;
+      }
+      .card {
+        padding: 12px 14px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>여행 리뷰 AI 실험 v2</h1>
+  <div class="app">
+    <h1>여행 리뷰 AI 실험 v2</h1>
+    <p class="subtitle">
+      여러 개의 여행 리뷰를 줄바꿈으로 나눠서 입력해보세요. 간단한 규칙 기반으로
+      점수와 키워드를 분석합니다.
+    </p>
 
-  <p>여러 개의 여행 리뷰를 줄바꿈으로 나눠서 입력해보세요:</p>
-  <p style="font-size: 0.9rem; color: #555;">
-    예시)<br>
-    위치도 좋고 직원들이 정말 친절했어요.<br>
-    방은 깨끗했지만 소음이 너무 심했습니다.
-  </p>
+    <p style="font-size: 0.9rem; color: #6b7280;">
+      예시)<br />
+      위치도 좋고 직원들이 정말 친절했어요.<br />
+      방은 깨끗했지만 소음이 너무 심했습니다.
+    </p>
 
-  <textarea id="reviews"></textarea>
-  <br>
-  <button type="button" onclick="fillSample()">샘플 리뷰 불러오기</button>
-  <button onclick="analyzeAll()">모두 분석하기</button>
+    <textarea id="reviews"></textarea>
 
-  <h2>결과:</h2>
-  <div id="output"></div>
+    <div class="controls">
+      <button type="button" class="btn-secondary" onclick="fillSample()">
+        샘플 리뷰 불러오기
+      </button>
+      <button type="button" class="btn-primary" onclick="analyzeAll()">
+        모두 분석하기
+      </button>
+    </div>
+
+    <h2>결과:</h2>
+    <div id="output"></div>
+  </div>
 
   <script>
-    // 1. 한 리뷰에 대한 점수 계산
+    // 1. 점수 계산
     function scoreReview(text) {
-      // 공백 정리
       text = text.replace(/\s+/g, " ").trim();
-    
       let score = 50;
-    
-      // ✅ 긍정 단어: 단어 하나마다 각각 점수
+
       if (text.includes("좋")) score += 10;
       if (text.includes("추천")) score += 10;
       if (text.includes("만족")) score += 10;
-    
       if (text.includes("최고")) score += 5;
       if (text.includes("완벽")) score += 5;
-    
       if (text.includes("친절")) score += 10;
       if (text.includes("기쁨")) score += 10;
       if (text.includes("기분")) score += 10;
-    
-      // ✅ 부정 단어: 하나라도 있으면 그만큼 깎기(중복 가능하면 개별 if 로)
+
       if (text.includes("별로")) score -= 20;
       if (text.includes("실망")) score -= 20;
       if (text.includes("최악")) score -= 20;
-    
       if (text.includes("비쌌")) score -= 10;
       if (text.includes("불편")) score -= 10;
       if (text.includes("시끄럽")) score -= 10;
       if (text.includes("소음")) score -= 10;
-    
+
       if (score > 100) score = 100;
       if (score < 0) score = 0;
       return score;
@@ -115,14 +306,13 @@
     function extractKeywords(text) {
       const positive = ["좋", "만족", "편안", "친절", "최고", "기분"];
       const negative = ["별로", "불편", "실망", "비쌌", "소음", "시끄럽", "좁", "더럽"];
-
       const facility = ["방", "룸", "화장실", "침대", "청소", "시설", "욕실"];
       const service = ["직원", "응대", "서비스", "친절"];
       const location = ["위치", "교통", "역", "근처"];
       const price = ["가격", "가성비", "비싸", "저렴"];
 
       function findMatches(words) {
-        return words.filter(w => text.includes(w));
+        return words.filter((w) => text.includes(w));
       }
 
       return {
@@ -131,15 +321,14 @@
         facility: findMatches(facility),
         service: findMatches(service),
         location: findMatches(location),
-        price: findMatches(price)
+        price: findMatches(price),
       };
     }
 
-    // 3. 감정 요약 한 줄 생성
+    // 3. 요약 문장
     function summarizeReview(kw, score) {
       let tone = "";
 
-      // 감정 톤 결정
       if (kw.positive.length > 0 && kw.negative.length === 0) {
         tone = "전반적으로 긍정적인 리뷰입니다.";
       } else if (kw.negative.length > 0 && kw.positive.length === 0) {
@@ -150,7 +339,6 @@
         tone = "감정 표현이 뚜렷하지 않은 리뷰입니다.";
       }
 
-      // 어떤 요소에 대한 내용인지 정리
       const aspects = [];
       if (kw.location.length > 0) aspects.push("위치");
       if (kw.service.length > 0) aspects.push("서비스");
@@ -165,60 +353,56 @@
       return (tone + " " + aspectText).trim();
     }
 
-    // 4. 키워드 배열을 태그 모양 HTML로 변환
-   function renderTags(words, bgColor) {
-    if (!words || words.length === 0) {
-      return '<span style="font-size:0.8rem; color:#999;">없음</span>';
-    }
+    // 4. 태그 렌더링 (칩 스타일)
+    function renderTags(words, bgColor) {
+      if (!words || words.length === 0) {
+        return '<span class="chip-empty">없음</span>';
+      }
 
       return words
         .map(
-          w => `<span style="
-            display:inline-block;
-            padding:4px 8px;
-            margin:2px 6px 2px 0;
-            border-radius:999px;
-            background-color:${bgColor};
-            border:1px solid rgba(0,0,0,0.12);
-            color:#111;
-            font-size:0.8rem;
-            font-weight:600;
-          ">${w}</span>`
+          (w) =>
+            `<span class="chip" style="background:${bgColor}; border-color:transparent;">${w}</span>`
         )
         .join("");
     }
 
-    // ⬇⬇⬇ 여기부터 새로 추가 ⬇⬇⬇
+    // 샘플 채우기
     function fillSample() {
       const sampleLines = [
         "위치도 좋고 직원들이 정말 친절해서 다시 오고 싶은 곳입니다. 정말 만족합니다.",
         "방은 깨끗했지만 소음이 조금 아쉬웠어요.",
         "가격은 조금 비쌌지만 서비스와 위치는 매우 만족스러웠습니다.",
         "주변 관광지가 많아서 이동하기 편했습니다.",
-        "직원 응대가 친절했고 체크인 과정도 편안했습니다."
+        "직원 응대가 친절했고 체크인 과정도 편안했습니다.",
       ];
-
-      const sampleText = sampleLines.join("\n");
-      document.getElementById("reviews").value = sampleText;
+      document.getElementById("reviews").value = sampleLines.join("\n");
     }
-    // ⬆⬆⬆ 여기까지 새로 추가 ⬆⬆⬆
 
-    // 5. 여러 리뷰를 한꺼번에 분석
+    // 이모지 선택
+    function scoreEmoji(score) {
+      if (score >= 80) return "😊";
+      if (score <= 40) return "😟";
+      return "😐";
+    }
+
+    // 5. 전체 분석 + 카드 UI 출력
     function analyzeAll() {
       const raw = document.getElementById("reviews").value.trim();
       const lines = raw
         .split(/\n+/)
-        .map(l => l.trim())
-        .filter(l => l.length > 0);
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
 
       if (lines.length === 0) {
-        document.getElementById("output").innerHTML = "<p>리뷰를 입력해주세요.</p>";
+        document.getElementById("output").innerHTML =
+          "<p>리뷰를 입력해주세요.</p>";
         return;
       }
 
       let totalScore = 0;
       let totalLength = 0;
-      let rows = "";
+      let cardsHtml = "";
 
       lines.forEach((review, idx) => {
         const score = scoreReview(review);
@@ -229,67 +413,73 @@
         totalScore += score;
         totalLength += length;
 
-      // 점수에 따라 색상 결정 (글자 색)
-      let scoreColor = "black";
-      if (score >= 80) {
-        scoreColor = "green";
-      } else if (score <= 50) {
-        scoreColor = "red";
-      }
+        let moodClass = "card--neutral";
+        let scoreClass = "score-pill--neutral";
+        if (score >= 75) {
+          moodClass = "card--good";
+          scoreClass = "score-pill--good";
+        } else if (score <= 50) {
+          moodClass = "card--bad";
+          scoreClass = "score-pill--bad";
+        }
 
-      function scoreEmoji(score) {
-      if (score >= 80) return "😊";
-      if (score >= 60) return "🙂";
-      if (score >= 40) return "😐";
-      return "😢";
-      }
+        cardsHtml += `
+          <article class="card ${moodClass}">
+            <header class="card-header">
+              <div class="card-title">리뷰 #${idx + 1}</div>
+              <div class="score-pill ${scoreClass}">
+                ${score}점 ${scoreEmoji(score)}
+              </div>
+            </header>
 
-      // ⭐ 점수에 따라 카드 배경색도 결정
-      let cardBg = "#ffffff"; // 기본 흰색
-      if (score >= 80) {
-        cardBg = "#ecfdf3";   // 연한 초록 (아주 좋은 리뷰)
-      } else if (score <= 50) {
-        cardBg = "#fef2f2";   // 연한 빨강 (별로인 리뷰)
-      }
+            <div class="review-text">${review}</div>
 
-      rows += `
-        <div class="card" style="background-color:${cardBg};">
-          <div class="card-content">
-            <div><strong>리뷰 내용:</strong> ${review}</div>
-      
-            <div class="card-score" style="color:${scoreColor};">
-            점수: ${score}점 ${scoreEmoji(score)}
+            <div class="meta-row">
+              <strong>글자수</strong> ${length}자
             </div>
-      
-            <div>글자수: ${length}자</div>
-      
-            <div class="card-tags">
-              <div><strong>긍정:</strong> ${renderTags(kw.positive, "#e6f4ea")}</div>
-              <div><strong>부정:</strong> ${renderTags(kw.negative, "#fdecea")}</div>
-              <div><strong>시설:</strong> ${renderTags(kw.facility, "#e8f0fe")}</div>
-              <div><strong>서비스:</strong> ${renderTags(kw.service, "#fff4e5")}</div>
-              <div><strong>위치:</strong> ${renderTags(kw.location, "#e0f7fa")}</div>
-              <div><strong>가격:</strong> ${renderTags(kw.price, "#f3e5f5")}</div>
+
+            <div class="tag-group">
+              <div><span class="tag-group-label">긍정</span>${renderTags(
+                kw.positive,
+                "#e6f4ea"
+              )}</div>
+              <div><span class="tag-group-label">부정</span>${renderTags(
+                kw.negative,
+                "#fdecea"
+              )}</div>
+              <div><span class="tag-group-label">시설</span>${renderTags(
+                kw.facility,
+                "#e8f0fe"
+              )}</div>
+              <div><span class="tag-group-label">서비스</span>${renderTags(
+                kw.service,
+                "#fff4e5"
+              )}</div>
+              <div><span class="tag-group-label">위치</span>${renderTags(
+                kw.location,
+                "#e0f7fa"
+              )}</div>
+              <div><span class="tag-group-label">가격</span>${renderTags(
+                kw.price,
+                "#f3e5f5"
+              )}</div>
             </div>
-      
+
             <div class="card-summary">${summary}</div>
-          </div>
-        </div>
-      `;
-
+          </article>
+        `;
       });
 
       const avgScore = Math.round(totalScore / lines.length);
       const avgLength = Math.round(totalLength / lines.length);
 
       document.getElementById("output").innerHTML = `
-      <p>
-        총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avgScore}점</strong><br>
-        평균 리뷰 길이: <strong>${avgLength}글자</strong>
-      </p>
-      ${rows}
-    `;
-
+        <div class="summary-bar">
+          총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avgScore}점</strong>,
+          평균 리뷰 길이: <strong>${avgLength}글자</strong>
+        </div>
+        ${cardsHtml}
+      `;
     }
   </script>
 </body>
