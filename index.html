@@ -232,16 +232,24 @@
         totalScore += score;
         totalLength += length;
 
-        // 점수에 따라 색상 결정
-        let scoreColor = "black";
-        if (score >= 80) {
-          scoreColor = "green";
-        } else if (score <= 50) {
-          scoreColor = "red";
-        }
+      // 점수에 따라 색상 결정 (글자 색)
+      let scoreColor = "black";
+      if (score >= 80) {
+        scoreColor = "green";
+      } else if (score <= 50) {
+        scoreColor = "red";
+      }
+
+      // ⭐ 점수에 따라 카드 배경색도 결정
+      let cardBg = "#ffffff"; // 기본 흰색
+      if (score >= 80) {
+        cardBg = "#ecfdf3";   // 연한 초록 (아주 좋은 리뷰)
+      } else if (score <= 50) {
+        cardBg = "#fef2f2";   // 연한 빨강 (별로인 리뷰)
+      }
 
       rows += `
-        <div class="card">
+        <div class="card" style="background-color:${cardBg};">
           <div class="card-content">
             <div><strong>리뷰 내용:</strong> ${review}</div>
       
