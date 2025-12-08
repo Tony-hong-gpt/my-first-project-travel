@@ -31,6 +31,30 @@
       background-color: #f4f4f4;
       text-align: left;
     }
+    .card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.card-score {
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.card-tags div {
+  margin-top: 4px;
+}
+
+.card-summary {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #444;
+}
   </style>
 </head>
 <body>
@@ -215,49 +239,44 @@
           scoreColor = "red";
         }
 
-        rows += `
-          <tr>
-            <td>${idx + 1}</td>
-            <td>${review}</td>
-            <td style="color: ${scoreColor}; font-weight: bold;">${score}점</td>
-            <td>${length}</td>
-            <td>
+      rows += `
+        <div class="card">
+          <div class="card-content">
+            <div><strong>리뷰 내용:</strong> ${review}</div>
+      
+            <div class="card-score" style="color:${scoreColor};">
+              점수: ${score}점
+            </div>
+      
+            <div>글자수: ${length}자</div>
+      
+            <div class="card-tags">
               <div><strong>긍정:</strong> ${renderTags(kw.positive, "#e6f4ea")}</div>
               <div><strong>부정:</strong> ${renderTags(kw.negative, "#fdecea")}</div>
               <div><strong>시설:</strong> ${renderTags(kw.facility, "#e8f0fe")}</div>
               <div><strong>서비스:</strong> ${renderTags(kw.service, "#fff4e5")}</div>
               <div><strong>위치:</strong> ${renderTags(kw.location, "#e0f7fa")}</div>
               <div><strong>가격:</strong> ${renderTags(kw.price, "#f3e5f5")}</div>
-            </td>
-            <td>${summary}</td>
-          </tr>
-        `;
+            </div>
+      
+            <div class="card-summary">${summary}</div>
+          </div>
+        </div>
+      `;
+
       });
 
       const avgScore = Math.round(totalScore / lines.length);
       const avgLength = Math.round(totalLength / lines.length);
 
       document.getElementById("output").innerHTML = `
-        <p>
-          총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avgScore}점</strong><br>
-          평균 리뷰 길이: <strong>${avgLength}글자</strong>
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>리뷰 내용</th>
-              <th>점수</th>
-              <th>글자수</th>
-              <th>키워드 분석</th>
-              <th>요약</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows}
-          </tbody>
-        </table>
-      `;
+      <p>
+        총 ${lines.length}개의 리뷰, 평균 점수: <strong>${avgScore}점</strong><br>
+        평균 리뷰 길이: <strong>${avgLength}글자</strong>
+      </p>
+      ${rows}
+    `;
+
     }
   </script>
 </body>
