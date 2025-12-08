@@ -165,6 +165,27 @@
     }
 
 
+    // ⬇⬇⬇ 여기부터 새로 추가 ⬇⬇⬇
+    function fillSample() {
+      const sampleLines = [
+        "위치도 좋고 직원들이 정말 친절해서 다시 오고 싶은 곳입니다. 정말 만족합니다.",
+        "방은 깨끗했지만 소음이 조금 아쉬웠어요.",
+        "가격은 조금 비쌌지만 서비스와 위치는 매우 만족스러웠습니다.",
+        "주변 관광지가 많아서 이동하기 편했습니다.",
+        "직원 응대가 친절했고 체크인 과정도 편안했습니다."
+      ];
+
+      const sampleText = sampleLines.join("\n");
+      document.getElementById("reviews").value = sampleText;
+    }
+    // ⬆⬆⬆ 여기까지 새로 추가 ⬆⬆⬆
+
+    // 5. 여러 리뷰를 한꺼번에 분석
+    function analyzeAll() {
+      const raw = document.getElementById("reviews").value.trim();
+      ...
+
+
     // 5. 여러 리뷰를 한꺼번에 분석
     function analyzeAll() {
       const raw = document.getElementById("reviews").value.trim();
