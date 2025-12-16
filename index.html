@@ -14,8 +14,9 @@
       --red: #dc2626;
       --accent: #3b82f6;
     }
-    mark.hl {         // CSS에 하이라이트 스타일 추가/
-      background: #fde68a; /* 연한 노랑 */
+    /* CSS에 하이라이트 스타일 추가 */
+    mark.hl {
+      background: #fde68a;
       padding: 0 2px;
       border-radius: 4px;
 }
@@ -550,15 +551,12 @@
     
     function renderResults() {
       if (!lastResults || lastResults.length === 0 || !lastStats) return;
-
+    
       const sortMode = document.getElementById("sortMode")?.value || "score_desc";
-
+    
       let view = applyFilter([...lastResults]);
       view = applySearch(view);
-
-      <div class="review-text">${highlight(review)}</div>
-      <div class="card-summary">${highlight(summary)}</div>
-
+    
       view.sort((a, b) => {
         switch (sortMode) {
           case "score_desc": return b.score - a.score;
@@ -570,31 +568,35 @@
           default: return 0;
         }
       });
-
+    
       let cardsHtml = "";
-
+    
       view.forEach((item) => {
         const { review, score, cred, length, kw, summary, idx } = item;
-
+    
         let moodClass = "card--neutral";
         let scoreClass = "score-pill--neutral";
         if (score >= 75) { moodClass = "card--good"; scoreClass = "score-pill--good"; }
         else if (score <= 50) { moodClass = "card--bad"; scoreClass = "score-pill--bad"; }
-
+    
         cardsHtml += `
           <article class="card ${moodClass}">
             <header class="card-header">
               <div class="card-title">리뷰 #${idx}</div>
-
+    
               <div class="card-header-right">
-                <div class="cred-pill ${credibilityClass(cred)}">${cred}점 · ${credibilityLabel(cred)}</div>
-                <div class="score-pill ${scoreClass}">${score}점 ${scoreEmoji(score)}</div>
+                <div class="cred-pill ${credibilityClass(cred)}">
+                  ${cred}점 · ${credibilityLabel(cred)}
+                </div>
+                <div class="score-pill ${scoreClass}">
+                  ${score}점 ${scoreEmoji(score)}
+                </div>
               </div>
             </header>
-
-            <div class="review-text">${review}</div>
+    
+            <div class="review-text">${highlight(review)}</div>
             <div class="meta-row"><strong>글자수</strong> ${length}자</div>
-
+    
             <div class="tag-group">
               <div><span class="tag-group-label">긍정</span>${renderTags(kw.positive, "#e6f4ea")}</div>
               <div><span class="tag-group-label">부정</span>${renderTags(kw.negative, "#fdecea")}</div>
@@ -603,12 +605,12 @@
               <div><span class="tag-group-label">위치</span>${renderTags(kw.location, "#e0f7fa")}</div>
               <div><span class="tag-group-label">가격</span>${renderTags(kw.price, "#f3e5f5")}</div>
             </div>
-
-            <div class="card-summary">${summary}</div>
+    
+            <div class="card-summary">${highlight(summary)}</div>
           </article>
         `;
       });
-
+    
       const filterMode = document.getElementById("filterMode")?.value || "all";
       const filterText = {
         all: "전체",
@@ -616,7 +618,7 @@
         neg_only: "부정만",
         cred_low: "신뢰도 낮음(55 미만)"
       }[filterMode];
-
+    
       document.getElementById("output").innerHTML = `
         <div class="summary-bar">
           (표시: <strong>${filterText}</strong>)
