@@ -299,7 +299,7 @@
       const negative = ["별로", "불편", "실망", "비쌌", "소음", "시끄럽", "좁", "더럽"];
       const facility = ["방", "룸", "화장실", "침대", "청소", "시설", "욕실"];
       const service = ["직원", "응대", "서비스", "친절"];
-      const location = ["위치", "교통", "역", "근처"];
+      const location = ["위치", "교통", "역", "근처", "관광지", "이동", "도보", "접근", "동선"];
       const price = ["가격", "가성비", "비싸", "저렴"];
 
       function findMatches(words) {
@@ -364,12 +364,24 @@
       const posCount = kw.positive.length;
       const negCount = kw.negative.length;
 
-      let toneLabel = "";
-      if (score >= 85 && posCount > negCount) toneLabel = "매우 만족도가 높은 후기입니다.";
-      else if (score >= 70 && posCount >= negCount) toneLabel = "대체로 만족스러운 후기입니다.";
-      else if (negCount > posCount && score <= 60) toneLabel = "아쉬운 점이 더 많이 드러나는 후기입니다.";
-      else if (posCount === 0 && negCount === 0) toneLabel = "감정 표현이 크지 않은 중립적인 후기입니다.";
-      else toneLabel = "좋은 점과 아쉬운 점이 함께 섞여 있는 후기입니다.";
+    let toneLabel = "";
+    
+    // ✅ 1) 키워드 조합(긍정/부정)으로 먼저 톤을 확정
+    if (posCount > 0 && negCount === 0) {
+      // 긍정만
+      if (score >= 85) toneLabel = "매우 만족도가 높은 후기입니다.";
+      else if (score >= 70) toneLabel = "대체로 만족스러운 후기입니다.";
+      else toneLabel = "긍정적인 내용이 있지만 점수는 보수적으로 계산된 후기입니다.";
+    } else if (negCount > 0 && posCount === 0) {
+      // 부정만
+      if (score <= 40) toneLabel = "불만이 강하게 드러나는 후기입니다.";
+      else toneLabel = "전반적으로 아쉬운 점이 강조된 후기입니다.";
+    } else if (posCount === 0 && negCount === 0) {
+      toneLabel = "감정 표현이 크지 않은 중립적인 후기입니다.";
+    } else {
+      // 긍정/부정이 같이 있을 때만 '섞임'
+      toneLabel = "좋은 점과 아쉬운 점이 함께 섞여 있는 후기입니다.";
+    }
 
       const aspects = [];
       if (kw.location.length > 0) aspects.push("위치");
