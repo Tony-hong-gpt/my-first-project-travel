@@ -623,45 +623,44 @@
 
     function analyzeAll() {
       lastResults = [];     // ✅ 누적 방지
-      lastStats = null;     // (선택) 통계도 새로 계산
-      
+      lastStats = null;
+  
       const raw = document.getElementById("reviews").value.trim();
       const lines = raw.split(/\n+/).map(l => l.trim()).filter(Boolean);
-
+  
       if (lines.length === 0) {
         document.getElementById("output").innerHTML = "<p>리뷰를 입력해주세요.</p>";
-        lastResults = [];
-        lastStats = null;
         return;
       }
-
-      lastResults = [];
+  
       let totalScore = 0;
       let totalLength = 0;
       let totalCred = 0;
-
+  
       lines.forEach((review, idx) => {
         const score = scoreReview(review);
         const cred = credibilityScore(review);
         const kw = extractKeywords(review);
         const length = review.length;
         const summary = summarizeReview(kw, score, cred);
+  
         const item = { idx: idx + 1, review, score, cred, length, kw, summary };
-    item.category = autoCategory(item);   // ✅ 카테고리 포함
-        
+        item.category = autoCategory(item);   // ✅ 카테고리 포함
+  
         lastResults.push(item);
-        
+  
         totalScore += score;
         totalLength += length;
         totalCred += cred;
-
+      }); // ✅ forEach 닫기
+  
       lastStats = {
         count: lines.length,
         avgScore: Math.round(totalScore / lines.length),
         avgLength: Math.round(totalLength / lines.length),
         avgCred: Math.round(totalCred / lines.length),
       };
-
+  
       renderResults();
     }
 
@@ -904,12 +903,17 @@
       });
     
       const filterMode = document.getElementById("filterMode")?.value || "all";
-      const filterText = {
+      const filterTextMap = {
         all: "전체",
         pos_only: "긍정만",
         neg_only: "부정만",
-        cred_low: "신뢰도 낮음(55 미만)"
-      }[filterMode];
+        cred_low: "신뢰도 낮음(55 미만)",
+        cat_stay: "카테고리: 숙소/시설",
+        cat_move: "카테고리: 관광/이동",
+        cat_service: "카테고리: 서비스",
+        cat_price: "카테고리: 가격",
+      };
+      const filterText = filterTextMap[filterMode] || "전체";
     
       const dashboardHtml = renderDashboard(view);
 
