@@ -647,16 +647,13 @@
         const length = review.length;
         const summary = summarizeReview(kw, score, cred);
         const item = { idx: idx + 1, review, score, cred, length, kw, summary };
+    item.category = autoCategory(item);   // ✅ 카테고리 포함
         
-        item.category = autoCategory(item);   // 🆕 추가
         lastResults.push(item);
         
         totalScore += score;
         totalLength += length;
         totalCred += cred;
-
-        lastResults.push({ idx: idx + 1, review, score, cred, length, kw, summary });
-      });
 
       lastStats = {
         count: lines.length,
