@@ -182,6 +182,29 @@
       color: #374151;
     }
 
+    /* 신뢰도 배지 */
+    .cred-pill{
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    
+    .cred--high{ background: rgba(22,163,74,0.10); color: #15803d; border-color: rgba(22,163,74,0.25); }
+    .cred--mid { background: rgba(245,158,11,0.12); color: #92400e; border-color: rgba(245,158,11,0.30); }
+    .cred--low { background: rgba(220,38,38,0.10); color: #b91c1c; border-color: rgba(220,38,38,0.25); }
+    
+    .card-header-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
     .review-text {
       font-size: 0.95rem;
       line-height: 1.5;
@@ -385,7 +408,7 @@ function summarizeReview(kw, score, credibility) {
       ];
       document.getElementById("reviews").value = sampleLines.join("\n");
     }
-
+    
     // 이모지 선택
     function scoreEmoji(score) {
       if (score >= 80) return "😊";
@@ -395,7 +418,19 @@ function summarizeReview(kw, score, credibility) {
     // JS에 새로운 함수 추가(Day 2 Step 1)
     function credibilityScore(text) {
     let score = 50;
-  
+
+    function credibilityLabel(c) {
+      if (c >= 80) return "신뢰도 높음";
+      if (c >= 55) return "보통";
+      return "낮음";
+    }
+    
+    function credibilityClass(c) {
+      if (c >= 80) return "cred--high";
+      if (c >= 55) return "cred--mid";
+      return "cred--low";
+    }
+      
     // 1) 리뷰 길이 기반
     if (text.length < 10) score -= 20;
     if (text.length > 80) score += 10;
@@ -457,8 +492,9 @@ function summarizeReview(kw, score, credibility) {
         const score = scoreReview(review);
         const kw = extractKeywords(review);
         const length = review.length;
-        const credibility = credibilityScore(review);   // 🆕 이 줄 추가
         const summary = summarizeReview(kw, score, credibility); // ✅ 여기 수정!
+        const cred = credibilityScore(review);
+
 
         totalScore += score;
         totalLength += length;
@@ -480,7 +516,7 @@ function summarizeReview(kw, score, credibility) {
               <div class="card-title">리뷰 #${idx + 1}</div>
               <div class="score-pill ${scoreClass}">
                 ${score}점 ${scoreEmoji(score)}
-              </div>
+              </div>       
             </header>
 
             <div class="review-text">${review}</div>
@@ -488,8 +524,8 @@ function summarizeReview(kw, score, credibility) {
             <div class="meta-row">
               <strong>글자수</strong> ${length}자
             </div>
-            <div class="meta-row">                       <!-- 🆕 추가 -->
-              <strong>신뢰도</strong> ${credibility}점
+            <div class="meta-row">                       
+              <strong>신뢰도</strong> ${cred}점
             </div>
 
             <div class="tag-group">
